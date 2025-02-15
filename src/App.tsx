@@ -330,6 +330,25 @@ function SecurityComparison() {
             </div>
           </div>
         </div>
+        
+        <motion.div
+          className="absolute inset-0 bg-red-100 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: showVulnerability ? 0.9 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <AlertTriangle className="w-16 h-16 text-red-500" />
+          <span className="ml-4 text-lg font-medium text-red-700">Данные скомпрометированы!</span>
+        </motion.div>
+        
+        <button
+          className="mt-6 px-4 py-2 bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors"
+          onClick={() => setShowVulnerability(!showVulnerability)}
+        >
+          {showVulnerability ? 'Скрыть уязвимость' : 'Показать уязвимость'}
+        </button>
+      </motion.div>
+
       <motion.div
         className="bg-white rounded-xl shadow-lg p-8"
         whileHover={{ scale: 1.02 }}
