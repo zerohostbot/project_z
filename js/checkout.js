@@ -1,32 +1,25 @@
 let map, marker;
-let confirmAddressBtn; // Объявляем глобально
+let confirmAddressBtn;
 
 function initMap() {
-    // Инициализируем карту с центром в Москве
     map = L.map('map').setView([55.76, 37.64], 11);
-    
-    // Добавляем слой OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
     const addressInput = document.getElementById('address');
 
-    // Обработчик клика по карте
     map.on('click', async (e) => {
         const { lat, lng } = e.latlng;
         
-        // Удаляем старый маркер если есть
         if (marker) {
             map.removeLayer(marker);
         }
         
-        // Создаем новый маркер
         marker = L.marker([lat, lng], {
             draggable: true
         }).addTo(map);
         
-        // Получаем адрес по координатам
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
             const data = await response.json();
@@ -35,7 +28,6 @@ function initMap() {
             console.error('Ошибка геокодирования:', error);
         }
 
-        // Обработчик перетаскивания маркера
         marker.on('dragend', async () => {
             const pos = marker.getLatLng();
             try {
@@ -48,7 +40,6 @@ function initMap() {
         });
     });
 
-    // Поиск по адресу
     addressInput.addEventListener('change', async () => {
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addressInput.value)}&format=json`);
@@ -74,22 +65,17 @@ function initMap() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Инициализируем кнопку подтверждения адреса
     confirmAddressBtn = document.querySelector('.confirm-address');
     
-    // Загружаем корзину из localStorage
     const cart = JSON.parse(localStorage.getItem('cart')) || { items: {} };
     
-    // Проверяем наличие товаров
     if (Object.keys(cart.items).length === 0) {
         window.location.href = './index.html';
         return;
     }
     
-    // Отображаем товары
     updateCheckoutCart(cart);
     
-    // Обработчик подтверждения адреса
     confirmAddressBtn.addEventListener('click', () => {
         const addressInput = document.getElementById('address');
         if (addressInput.value.trim().length < 5) {
@@ -100,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         addressInput.disabled = true;
     });
 
-    // Обработчики для методов оплаты
     document.querySelectorAll('.payment-method').forEach(button => {
         button.addEventListener('click', async (e) => {
             // Проверяем, что адрес подтвержден
@@ -112,17 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const method = button.dataset.method;
             const addressInput = document.getElementById('address');
             
-            // Начинаем анимацию загрузки
             button.classList.add('loading');
             
-            // Имитируем процесс оплаты
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            // Показываем успех
             button.classList.remove('loading');
             button.classList.add('success');
             
-            // Создаем заказ
             const order = {
                 items: cart.items,
                 address: addressInput.value,
@@ -158,7 +139,6 @@ function showSuccessPopup(callback) {
                 </svg>
             </div>
             <h2>заказ оформлен</h2>
-            <p>спасибо за заказ!</p>
             <p class="redirect-text">переходим к отслеживанию доставки</p>
         </div>
     `;
@@ -265,7 +245,6 @@ function showSuccessPopup(callback) {
     `;
     document.head.appendChild(style);
     
-    // Анимируем появление
     requestAnimationFrame(() => {
         popup.classList.add('visible');
     });
