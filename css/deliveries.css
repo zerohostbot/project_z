@@ -1,0 +1,243 @@
+.deliveries-main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 48px 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.deliveries-container h1 {
+    font-size: 32px;
+    margin-bottom: 32px;
+}
+
+.deliveries-container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.deliveries-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.deliveries-section h2 {
+    font-size: 20px;
+    color: var(--gray-dark);
+}
+
+.delivery-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.delivery-card:hover {
+    transform: translateY(-2px);
+}
+
+.delivery-info {
+    margin-top: 16px;
+}
+
+.delivery-date {
+    color: var(--gray-dark);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.delivery-address {
+    font-size: 15px;
+    margin-bottom: 16px;
+    color: var(--text-color);
+}
+
+.delivery-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.delivery-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.delivery-item img {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.delivery-item-info {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delivery-item-name {
+    font-size: 15px;
+    color: var(--text-color);
+}
+
+.delivery-item-quantity {
+    font-size: 14px;
+    color: var(--gray-dark);
+}
+
+/* Статусы с временной шкалой */
+.delivery-status-timeline {
+    display: flex;
+    align-items: center;
+    margin: 24px 0;
+    position: relative;
+}
+
+.status-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.status-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    border: 2px solid var(--gray);
+    transition: all 0.3s ease;
+}
+
+.status-icon svg {
+    width: 16px;
+    height: 16px;
+    color: var(--gray);
+    transition: all 0.3s ease;
+}
+
+.status-text {
+    font-size: 13px;
+    color: var(--gray-dark);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.status-time {
+    font-size: 12px;
+    color: var(--gray);
+    margin-top: 4px;
+}
+
+/* Линия прогресса */
+.progress-line {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gray);
+    z-index: 0;
+}
+
+.progress-line-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: var(--primary-color);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Активные статусы */
+.status-step.active .status-icon {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.status-step.active .status-icon svg {
+    color: white;
+}
+
+.status-step.active .status-text {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.status-step.completed .status-icon {
+    background: #4CAF50;
+    border-color: #4CAF50;
+}
+
+/* Карта отслеживания */
+.delivery-tracking-map {
+    height: calc(100vh - 200px);
+    border-radius: 16px;
+    overflow: hidden;
+    position: sticky;
+    top: 104px;
+    box-shadow: var(--shadow);
+}
+
+/* Пустое состояние */
+.empty-deliveries {
+    text-align: center;
+    padding: 48px;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+
+.empty-deliveries p {
+    font-size: 17px;
+    color: var(--gray-dark);
+    margin-bottom: 24px;
+}
+
+.primary-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.primary-button:hover {
+    background: #1E4BBA;
+}
+
+.delivery-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px !important;
+    height: 32px !important;
+    margin-left: -16px;
+    margin-top: -16px;
+}
+
+.marker-content {
+    font-size: 24px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+} 
