@@ -6,7 +6,7 @@
             "name": "томаты розовые",
             "description": "узбекистан, 500г",
             "price": 229,
-            "image": "https://placehold.co/400x400/e74c3c/ffffff/webp?text=Томаты&font=playfair"
+            "image": "https://placehold.co/400x400/e74c3c/ffffff/webp?text=Томаты"
         },
         {
             "id": "cucumber-1",
@@ -64,7 +64,7 @@
             "name": "хлеб бородинский",
             "description": "свежий, теплый, 300г",
             "price": 79,
-            "image": "https://placehold.co/400x400/f39c12/ffffff/webp?text=Хлеб&font=playfair"
+            "image": "https://placehold.co/400x400/f39c12/ffffff/webp?text=Хлеб"
         },
         {
             "id": "bread-2",
