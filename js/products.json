@@ -1,0 +1,351 @@
+{
+    "all": [],
+    "fresh": [
+        {
+            "id": "tomato-1",
+            "name": "томаты розовые",
+            "description": "узбекистан, 500г",
+            "price": 229,
+            "image": "https://placehold.co/400x400/e74c3c/ffffff/webp?text=Томаты&font=playfair"
+        },
+        {
+            "id": "cucumber-1",
+            "name": "огурцы короткоплодные",
+            "description": "тепличные, 400г",
+            "price": 169,
+            "image": "https://placehold.co/400x400/27ae60/ffffff?text=Огурцы"
+        },
+        {
+            "id": "lettuce-1",
+            "name": "салат айсберг",
+            "description": "свежий, 200г",
+            "price": 129,
+            "image": "https://placehold.co/400x400/2ecc71/ffffff?text=Салат"
+        },
+        {
+            "id": "herbs-1",
+            "name": "зелень микс",
+            "description": "укроп, петрушка, 100г",
+            "price": 89,
+            "image": "https://placehold.co/400x400/27ae60/ffffff?text=Зелень"
+        },
+        {
+            "id": "spinach-1",
+            "name": "шпинат беби",
+            "description": "молодой, 150г",
+            "price": 159,
+            "image": "https://placehold.co/400x400/2ecc71/ffffff?text=Шпинат"
+        },
+        {
+            "id": "arugula-1",
+            "name": "руккола",
+            "description": "свежая, 100г",
+            "price": 149,
+            "image": "https://placehold.co/400x400/27ae60/ffffff?text=Руккола"
+        },
+        {
+            "id": "tomato-2",
+            "name": "томаты черри",
+            "description": "сладкие, 250г",
+            "price": 199,
+            "image": "https://placehold.co/400x400/e74c3c/ffffff?text=Томаты"
+        },
+        {
+            "id": "cucumber-2",
+            "name": "огурцы для салата",
+            "description": "среднеплодные, 600г",
+            "price": 189,
+            "image": "https://placehold.co/400x400/27ae60/ffffff?text=Огурцы"
+        }
+    ],
+    "bread": [
+        {
+            "id": "bread-1",
+            "name": "хлеб бородинский",
+            "description": "свежий, теплый, 300г",
+            "price": 79,
+            "image": "https://placehold.co/400x400/f39c12/ffffff/webp?text=Хлеб&font=playfair"
+        },
+        {
+            "id": "bread-2",
+            "name": "багет французский",
+            "description": "хрустящая корочка, 250г",
+            "price": 89,
+            "image": "https://placehold.co/400x400/d35400/ffffff?text=Багет"
+        },
+        {
+            "id": "bread-3",
+            "name": "чиабатта",
+            "description": "итальянская, 200г",
+            "price": 119,
+            "image": "https://placehold.co/400x400/e67e22/ffffff?text=Чиабатта"
+        },
+        {
+            "id": "bread-4",
+            "name": "хлеб тостовый",
+            "description": "пшеничный, 400г",
+            "price": 109,
+            "image": "https://placehold.co/400x400/f1c40f/ffffff?text=Тостовый"
+        },
+        {
+            "id": "bread-5",
+            "name": "круассан классический",
+            "description": "масляный, 70г",
+            "price": 69,
+            "image": "https://placehold.co/400x400/f39c12/ffffff?text=Круассан"
+        },
+        {
+            "id": "bread-6",
+            "name": "булочки с маком",
+            "description": "4 шт, 240г",
+            "price": 129,
+            "image": "https://placehold.co/400x400/d35400/ffffff?text=Булочки"
+        },
+        {
+            "id": "bread-7",
+            "name": "хлеб деревенский",
+            "description": "на закваске, 450г",
+            "price": 149,
+            "image": "https://placehold.co/400x400/f39c12/ffffff?text=Хлеб"
+        },
+        {
+            "id": "bread-8",
+            "name": "багет с чесноком",
+            "description": "с травами, 200г",
+            "price": 99,
+            "image": "https://placehold.co/400x400/d35400/ffffff?text=Багет"
+        }
+    ],
+    "ready": [
+        {
+            "id": "soup-1",
+            "name": "борщ домашний",
+            "description": "со сметаной, 400мл",
+            "price": 259,
+            "image": "https://placehold.co/400x400/c0392b/ffffff?text=Борщ"
+        },
+        {
+            "id": "pasta-1",
+            "name": "паста карбонара",
+            "description": "с беконом, 300г",
+            "price": 359,
+            "image": "https://placehold.co/400x400/8e44ad/ffffff?text=Паста"
+        },
+        {
+            "id": "ready-1",
+            "name": "плов узбекский",
+            "description": "с бараниной, 400г",
+            "price": 329,
+            "image": "https://placehold.co/400x400/d35400/ffffff?text=Плов"
+        },
+        {
+            "id": "ready-2",
+            "name": "пельмени сибирские",
+            "description": "ручная лепка, 450г",
+            "price": 399,
+            "image": "https://placehold.co/400x400/bdc3c7/ffffff?text=Пельмени"
+        },
+        {
+            "id": "ready-3",
+            "name": "котлеты куриные",
+            "description": "с пюре, 300г",
+            "price": 289,
+            "image": "https://placehold.co/400x400/e74c3c/ffffff?text=Котлеты"
+        },
+        {
+            "id": "ready-4",
+            "name": "лазанья",
+            "description": "с говядиной, 350г",
+            "price": 419,
+            "image": "https://placehold.co/400x400/e67e22/ffffff?text=Лазанья"
+        },
+        {
+            "id": "ready-5",
+            "name": "гуляш говяжий",
+            "description": "с подливой, 350г",
+            "price": 379,
+            "image": "https://placehold.co/400x400/c0392b/ffffff?text=Гуляш"
+        },
+        {
+            "id": "ready-6",
+            "name": "рис с овощами",
+            "description": "гарнир, 250г",
+            "price": 159,
+            "image": "https://placehold.co/400x400/f1c40f/ffffff?text=Рис"
+        }
+    ],
+    "fruits": [
+        {
+            "id": "apple-1",
+            "name": "яблоки голден",
+            "description": "сладкие, 1кг",
+            "price": 169,
+            "image": "https://placehold.co/400x400/2ecc71/ffffff?text=Яблоки"
+        },
+        {
+            "id": "banana-1",
+            "name": "бананы",
+            "description": "эквадор, 1кг",
+            "price": 129,
+            "image": "https://placehold.co/400x400/f1c40f/ffffff?text=Бананы"
+        },
+        {
+            "id": "orange-1",
+            "name": "апельсины",
+            "description": "марокко, 1кг",
+            "price": 199,
+            "image": "https://placehold.co/400x400/e67e22/ffffff?text=Апельсины"
+        },
+        {
+            "id": "mandarin-1",
+            "name": "мандарины",
+            "description": "абхазия, 1кг",
+            "price": 239,
+            "image": "https://placehold.co/400x400/e74c3c/ffffff?text=Мандарины"
+        },
+        {
+            "id": "pear-1",
+            "name": "груши конференц",
+            "description": "сладкие, 1кг",
+            "price": 259,
+            "image": "https://placehold.co/400x400/f39c12/ffffff?text=Груши"
+        },
+        {
+            "id": "kiwi-1",
+            "name": "киви",
+            "description": "новая зеландия, 500г",
+            "price": 199,
+            "image": "https://placehold.co/400x400/27ae60/ffffff?text=Киви"
+        },
+        {
+            "id": "grape-1",
+            "name": "виноград без косточек",
+            "description": "сладкий, 500г",
+            "price": 299,
+            "image": "https://placehold.co/400x400/8e44ad/ffffff?text=Виноград"
+        },
+        {
+            "id": "lemon-1",
+            "name": "лимоны",
+            "description": "турция, 400г",
+            "price": 159,
+            "image": "https://placehold.co/400x400/f1c40f/ffffff?text=Лимоны"
+        }
+    ],
+    "milk": [
+        {
+            "id": "milk-1",
+            "name": "молоко фермерское",
+            "description": "3.2%, 1л",
+            "price": 109,
+            "image": "https://placehold.co/400x400/ecf0f1/000000?text=Молоко"
+        },
+        {
+            "id": "yogurt-1",
+            "name": "йогурт греческий",
+            "description": "натуральный, 250г",
+            "price": 89,
+            "image": "https://placehold.co/400x400/bdc3c7/000000?text=Йогурт"
+        },
+        {
+            "id": "cheese-1",
+            "name": "сыр пармезан",
+            "description": "выдержанный, 200г",
+            "price": 459,
+            "image": "https://placehold.co/400x400/f1c40f/ffffff?text=Пармезан"
+        },
+        {
+            "id": "butter-1",
+            "name": "масло сливочное",
+            "description": "82.5%, 200г",
+            "price": 219,
+            "image": "https://placehold.co/400x400/f39c12/ffffff?text=Масло"
+        },
+        {
+            "id": "cream-1",
+            "name": "сливки для кофе",
+            "description": "10%, 500мл",
+            "price": 159,
+            "image": "https://placehold.co/400x400/ecf0f1/000000?text=Сливки"
+        },
+        {
+            "id": "cottage-1",
+            "name": "творог фермерский",
+            "description": "9%, 350г",
+            "price": 189,
+            "image": "https://placehold.co/400x400/bdc3c7/000000?text=Творог"
+        },
+        {
+            "id": "cheese-2",
+            "name": "сыр моцарелла",
+            "description": "для пиццы, 250г",
+            "price": 289,
+            "image": "https://placehold.co/400x400/ecf0f1/000000?text=Сыр"
+        },
+        {
+            "id": "kefir-1",
+            "name": "кефир фермерский",
+            "description": "3.2%, 1л",
+            "price": 119,
+            "image": "https://placehold.co/400x400/bdc3c7/000000?text=Кефир"
+        }
+    ],
+    "meat": [
+        {
+            "id": "beef-1",
+            "name": "стейк рибай",
+            "description": "мраморная говядина, 300г",
+            "price": 799,
+            "image": "https://placehold.co/400x400/e74c3c/ffffff?text=Стейк"
+        },
+        {
+            "id": "chicken-1",
+            "name": "филе куриное",
+            "description": "охлажденное, 500г",
+            "price": 299,
+            "image": "https://placehold.co/400x400/d35400/ffffff?text=Курица"
+        },
+        {
+            "id": "pork-1",
+            "name": "свинина для жаркого",
+            "description": "шея, 500г",
+            "price": 459,
+            "image": "https://placehold.co/400x400/c0392b/ffffff?text=Свинина"
+        },
+        {
+            "id": "salmon-1",
+            "name": "лосось стейк",
+            "description": "охлажденный, 300г",
+            "price": 699,
+            "image": "https://placehold.co/400x400/e67e22/ffffff?text=Лосось"
+        },
+        {
+            "id": "turkey-1",
+            "name": "индейка филе",
+            "description": "грудка, 450г",
+            "price": 389,
+            "image": "https://placehold.co/400x400/d35400/ffffff?text=Индейка"
+        },
+        {
+            "id": "lamb-1",
+            "name": "баранина для плова",
+            "description": "мякоть, 500г",
+            "price": 649,
+            "image": "https://placehold.co/400x400/c0392b/ffffff?text=Баранина"
+        },
+        {
+            "id": "beef-2",
+            "name": "фарш говяжий",
+            "description": "домашний, 500г",
+            "price": 459,
+            "image": "https://placehold.co/400x400/e74c3c/ffffff?text=Фарш"
+        },
+        {
+            "id": "chicken-2",
+            "name": "крылья куриные",
+            "description": "для запекания, 600г",
+            "price": 279,
+            "image": "https://placehold.co/400x400/d35400/ffffff?text=Крылья"
+        }
+    ]
+} 

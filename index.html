@@ -1,13 +1,144 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Блокчейн в логистике и торговле</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>пусто — быстрая доставка продуктов</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="index.html" class="logo">
+                    <img src="img/logo.svg" alt="пусто">
+                    <span class="logo-text">пусто</span>
+                </a>
+                <div class="search-wrapper">
+                    <div class="search-bar">
+                        <img src="img/icons/search.svg" alt="">
+                        <input type="text" placeholder="найти продукты">
+                    </div>
+                    <div class="search-results"></div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <a href="deliveries.html" class="deliveries-button">
+                    <img src="img/icons/box.svg" alt="доставки">
+                    мои доставки
+                </a>
+                <button class="cart-button">
+                    <img src="img/icons/cart.svg" alt="корзина">
+                    <span class="cart-text">корзина</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <aside class="sidebar">
+            <div class="sidebar-categories">
+                <a href="#" class="category-item active" data-category="all">
+                    <img src="img/categories/all.svg" alt="">
+                    <span>все продукты</span>
+                </a>
+                <a href="#" class="category-item" data-category="fresh">
+                    <img src="img/categories/fresh.svg" alt="">
+                    <span>свежее</span>
+                </a>
+                <a href="#" class="category-item" data-category="bread">
+                    <img src="img/categories/bread.svg" alt="">
+                    <span>выпечка</span>
+                </a>
+                <a href="#" class="category-item" data-category="ready">
+                    <img src="img/categories/ready-food.svg" alt="">
+                    <span>готовая еда</span>
+                </a>
+                <a href="#" class="category-item" data-category="fruits">
+                    <img src="img/categories/fruits.svg" alt="">
+                    <span>овощи и фрукты</span>
+                </a>
+                <a href="#" class="category-item" data-category="milk">
+                    <img src="img/categories/milk.svg" alt="">
+                    <span>молоко, яйца и сыр</span>
+                </a>
+                <a href="#" class="category-item" data-category="meat">
+                    <img src="img/categories/meat.svg" alt="">
+                    <span>мясо и рыба</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <div class="welcome-animation">
+                <div class="animation-text">
+                    <h1>ждём ваш заказ</h1>
+                    <p>доставим за 30 минут</p>
+                </div>
+            </div>
+
+            <section class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="img/products/bread.jpg" alt="хлеб бородинский">
+                    </div>
+                    <div class="product-info">
+                        <h3>хлеб бородинский</h3>
+                        <p>свежий, теплый, 300г</p>
+                        <div class="product-footer">
+                            <span class="price">79 ₽</span>
+                            <button class="add-to-cart">
+                                <span>+</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <aside class="cart-sidebar">
+            <div class="cart-header">
+                <h2>корзина</h2>
+                <span class="items-count">0 товаров</span>
+            </div>
+            
+            <div class="cart-items">
+                <!-- Товары будут добавляться динамически -->
+            </div>
+
+            <div class="cart-footer">
+                <div class="total">
+                    <span>итого</span>
+                    <span class="total-price">0 ₽</span>
+                </div>
+                <button class="checkout-button">оформить заказ</button>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            <div class="footer-left">
+                <div class="footer-logo">
+                    <img src="img/logo.svg" alt="пусто">
+                    <span class="logo-text">пусто</span>
+                </div>
+                <div class="company-info">
+                    <p>© 2024 ООО «Пусто»</p>
+                    <p>ОГРН 4212342123</p>
+                    <p>ИНН 4560014242</p>
+                    <p>Юридический адрес: 45752, г. Москва, ул. Пустая, д. 1</p>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="#">Отзывы</a>
+                <a href="#">Telegram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 

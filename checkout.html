@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>пусто — оформление заказа</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/checkout.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="/" class="logo">
+                    <img src="img/logo.svg" alt="пусто">
+                    <span class="logo-text">пусто</span>
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="/deliveries.html" class="deliveries-button">
+                    <img src="img/icons/box.svg" alt="доставки">
+                    мои доставки
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="checkout-main">
+        <div class="checkout-container">
+            <h1>оформление заказа</h1>
+            
+            <div class="checkout-grid">
+                <!-- Левая колонка с картой -->
+                <div class="delivery-section">
+                    <h2>адрес доставки</h2>
+                    <div class="map-container">
+                        <div id="map" class="delivery-map"></div>
+                        <div class="address-input">
+                            <input type="text" placeholder="введите адрес доставки" id="address">
+                            <button class="confirm-address">подтвердить</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Центральная колонка с корзиной -->
+                <div class="cart-section">
+                    <h2>ваш заказ</h2>
+                    <div class="cart-items-checkout">
+                        <!-- Товары будут добавлены динамически -->
+                    </div>
+                    <div class="cart-total">
+                        <div class="subtotal">
+                            <span>товары</span>
+                            <span class="amount">0 ₽</span>
+                        </div>
+                        <div class="delivery-cost">
+                            <span>доставка</span>
+                            <span class="amount">0 ₽</span>
+                        </div>
+                        <div class="total">
+                            <span>итого</span>
+                            <span class="amount">0 ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Правая колонка с оплатой -->
+                <div class="payment-section">
+                    <h2>способ оплаты</h2>
+                    <div class="payment-methods">
+                        <button class="payment-method" data-method="card">
+                            <img src="img/icons/card.svg" alt="карта">
+                            <span>банковская карта</span>
+                            <div class="loading-indicator"></div>
+                        </button>
+                        <button class="payment-method" data-method="sbp">
+                            <img src="img/icons/sbp.svg" alt="сбп">
+                            <span>система быстрых платежей</span>
+                            <div class="loading-indicator"></div>
+                        </button>
+                        <button class="payment-method" data-method="cash">
+                            <img src="img/icons/cash.svg" alt="наличные">
+                            <span>наличными курьеру</span>
+                            <div class="loading-indicator"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="js/checkout.js"></script>
+</body>
+</html> 

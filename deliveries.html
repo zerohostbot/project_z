@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>пусто — мои доставки</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/deliveries.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <a href="index.html" class="logo">
+                    <img src="img/logo.svg" alt="пусто">
+                    <span class="logo-text">пусто</span>
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="deliveries.html" class="deliveries-button active">
+                    <img src="img/icons/box.svg" alt="доставки">
+                    мои доставки
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="deliveries-main">
+        <div class="deliveries-container">
+            <h1>мои доставки</h1>
+            <div class="deliveries-list">
+                <!-- Заказы будут добавлены динамически -->
+            </div>
+        </div>
+        <div id="delivery-map" class="delivery-tracking-map"></div>
+    </main>
+
+    <script src="js/deliveries.js"></script>
+</body>
+</html> 
