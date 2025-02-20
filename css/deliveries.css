@@ -22,11 +22,14 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    margin-bottom: 32px;
+    transition: all 0.5s ease;
 }
 
 .deliveries-section h2 {
     font-size: 20px;
     color: var(--gray-dark);
+    margin-bottom: 16px;
 }
 
 .delivery-card {
@@ -35,7 +38,9 @@
     padding: 24px;
     box-shadow: var(--shadow);
     position: relative;
-    transition: transform 0.2s ease;
+    transition: all 0.5s ease;
+    margin-bottom: 16px;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .delivery-card:hover {
@@ -240,4 +245,287 @@
 .marker-content {
     font-size: 24px;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.courier-marker {
+    width: 40px !important;
+    height: 40px !important;
+    margin-left: -20px !important;
+    margin-top: -20px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.courier-icon {
+    font-size: 32px !important;
+    transform-origin: center;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* Анимация движения */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.courier-marker .courier-icon {
+    animation: pulse 1s infinite;
+}
+
+/* Анимация появления */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Современный переключатель режимов */
+.mode-switch {
+    position: fixed;
+    top: 100px;
+    right: 32px;
+    background: white;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mode-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mode-label::before {
+    content: "🔗";
+    font-size: 16px;
+}
+
+.switch {
+    position: relative;
+    width: 52px;
+    height: 28px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input:checked + .slider {
+    background: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Классический режим */
+.classic-mode .delivery-card {
+    background: white;
+    border: 1px solid #eee;
+    padding: 24px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.classic-mode .delivery-order-info {
+    display: grid;
+    gap: 12px;
+}
+
+.classic-mode .delivery-order-info h3 {
+    font-size: 18px;
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.classic-mode .delivery-info p {
+    font-size: 15px;
+    color: #666;
+    margin: 4px 0;
+}
+
+.classic-mode .delivery-contact {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+    color: #666;
+}
+
+.classic-mode .delivery-contact p:last-child {
+    color: #e74c3c;
+    font-weight: 500;
+}
+
+/* Сворачиваемые секции */
+.deliveries-section {
+    margin-bottom: 24px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 12px 16px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+}
+
+.section-header:hover {
+    background: #f8f9fa;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.section-content.expanded {
+    max-height: 2000px;
+}
+
+/* Анимация курьера */
+.courier-marker {
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.courier-route {
+    stroke-dasharray: 8;
+    animation: dash 1s linear infinite;
+    opacity: 0.8;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: -16;
+    }
+}
+
+/* Стили для классического режима */
+body.classic-mode {
+    /* Удаляем глобальное изменение цветов */
+    --primary-color: inherit;
+    --secondary-color: inherit;
+}
+
+/* Обновляем только логотип и заголовки */
+.classic-mode .logo-text,
+.classic-mode .delivery-order-info h3,
+.classic-mode .deliveries-button {
+    color: #e74c3c !important;
+}
+
+.classic-mode .delivery-card {
+    background: white;
+    border: 1px solid #eee;
+    padding: 24px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.classic-mode .delivery-status-timeline,
+.classic-mode .delivery-tracking-map {
+    display: none;
+}
+
+.classic-mode .delivery-info {
+    margin-top: 0;
+}
+
+.classic-mode .delivery-card {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.classic-mode .delivery-order-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.classic-mode .delivery-contact {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+}
+
+/* Обновляем стили заголовков секций */
+.classic-mode .section-header h2 {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* Оставляем цветовую маркировку секций */
+.classic-mode .deliveries-section[data-status="processing"] {
+    border-left: 4px solid #f1c40f;
+}
+
+.classic-mode .deliveries-section[data-status="delivering"] {
+    border-left: 4px solid #3498db;
+}
+
+.classic-mode .deliveries-section[data-status="completed"] {
+    border-left: 4px solid #2ecc71;
+}
+
+.marker-icon {
+    font-size: 32px !important;
 } 

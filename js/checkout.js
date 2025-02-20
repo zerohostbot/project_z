@@ -1,25 +1,32 @@
 let map, marker;
-let confirmAddressBtn;
+let confirmAddressBtn; // Объявляем глобально
 
 function initMap() {
+    // Инициализируем карту с центром в Москве
     map = L.map('map').setView([55.76, 37.64], 11);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    
+    // Добавляем слой OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
     const addressInput = document.getElementById('address');
 
+    // Обработчик клика по карте
     map.on('click', async (e) => {
         const { lat, lng } = e.latlng;
         
+        // Удаляем старый маркер если есть
         if (marker) {
             map.removeLayer(marker);
         }
         
+        // Создаем новый маркер
         marker = L.marker([lat, lng], {
             draggable: true
         }).addTo(map);
         
+        // Получаем адрес по координатам
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
             const data = await response.json();
@@ -28,6 +35,7 @@ function initMap() {
             console.error('Ошибка геокодирования:', error);
         }
 
+        // Обработчик перетаскивания маркера
         marker.on('dragend', async () => {
             const pos = marker.getLatLng();
             try {
@@ -40,6 +48,7 @@ function initMap() {
         });
     });
 
+    // Поиск по адресу
     addressInput.addEventListener('change', async () => {
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addressInput.value)}&format=json`);
@@ -65,17 +74,26 @@ function initMap() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    confirmAddressBtn = document.querySelector('.confirm-address');
+    // Проверяем наличие корзины и заказа
+    const savedCart = localStorage.getItem('cart');
+    const currentOrder = localStorage.getItem('currentOrder');
     
-    const cart = JSON.parse(localStorage.getItem('cart')) || { items: {} };
-    
-    if (Object.keys(cart.items).length === 0) {
-        window.location.href = './index.html';
+    if (!savedCart || !currentOrder) {
+        // Если нет данных, возвращаемся на главную
+        window.location.href = 'index.html';
         return;
     }
     
+    // Загружаем корзину
+    const cart = JSON.parse(savedCart);
+    
+    // Инициализируем кнопку подтверждения адреса
+    confirmAddressBtn = document.querySelector('.confirm-address');
+    
+    // Отображаем товары
     updateCheckoutCart(cart);
     
+    // Обработчик подтверждения адреса
     confirmAddressBtn.addEventListener('click', () => {
         const addressInput = document.getElementById('address');
         if (addressInput.value.trim().length < 5) {
@@ -86,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addressInput.disabled = true;
     });
 
+    // Обработчики для методов оплаты
     document.querySelectorAll('.payment-method').forEach(button => {
         button.addEventListener('click', async (e) => {
             // Проверяем, что адрес подтвержден
@@ -97,13 +116,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const method = button.dataset.method;
             const addressInput = document.getElementById('address');
             
+            // Начинаем анимацию загрузки
             button.classList.add('loading');
             
+            // Имитируем процесс оплаты
             await new Promise(resolve => setTimeout(resolve, 2000));
             
+            // Показываем успех
             button.classList.remove('loading');
             button.classList.add('success');
             
+            // Создаем заказ
             const order = {
                 items: cart.items,
                 address: addressInput.value,
@@ -245,6 +268,7 @@ function showSuccessPopup(callback) {
     `;
     document.head.appendChild(style);
     
+    // Анимируем появление
     requestAnimationFrame(() => {
         popup.classList.add('visible');
     });
@@ -302,4 +326,43 @@ function showNotification(message) {
 }
 
 // Запускаем инициализацию карты после загрузки DOM
-document.addEventListener('DOMContentLoaded', initMap); 
+document.addEventListener('DOMContentLoaded', initMap);
+
+// В функции оформления заказа
+document.querySelector('.checkout-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const currentOrder = JSON.parse(localStorage.getItem('currentOrder'));
+    if (!currentOrder) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    // Получаем адрес из формы и маркера
+    const address = document.getElementById('address').value;
+    const marker = window.deliveryMarker;
+    
+    if (!address || !marker) {
+        showNotification('Укажите адрес доставки');
+        return;
+    }
+    
+    // Обновляем заказ с адресом и координатами
+    currentOrder.address = address;
+    currentOrder.coordinates = marker.getLatLng();
+    
+    // Обновляем заказ в общем списке заказов
+    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+    const orderIndex = orders.findIndex(o => o.id === currentOrder.id);
+    if (orderIndex !== -1) {
+        orders[orderIndex] = currentOrder;
+        localStorage.setItem('orders', JSON.stringify(orders));
+    }
+
+    // Очищаем корзину
+    localStorage.removeItem('cart');
+    localStorage.removeItem('currentOrder');
+
+    // Переходим на страницу доставок
+    window.location.href = 'deliveries.html';
+}); 

@@ -307,36 +307,111 @@ main {
     }
 }
 
-.welcome-animation {
-    height: 320px;
+.promo-slider {
+    display: block;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 32px;
+    height: 300px; /* Фиксированная высота */
+}
+
+.promo-slides {
+    display: flex;
+    transition: transform 0.3s ease;
+}
+
+.promo-slide {
+    min-width: 100%;
+    position: relative;
+}
+
+.promo-slide img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.promo-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: white;
+}
+
+.promo-controls {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 0 24px;
+}
+
+.prev-slide,
+.next-slide {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--primary-color) 0%, #5C6BC0 100%);
-    border-radius: 24px;
-    margin-bottom: 48px;
-    color: white;
-    text-align: center;
+    transition: all 0.2s ease;
 }
 
-.animation-text h1 {
-    font-size: 36px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    animation: fadeInUp 0.8s ease;
+.prev-slide:hover,
+.next-slide:hover {
+    background: white;
+    transform: scale(1.1);
 }
 
-.animation-text p {
-    font-size: 24px;
+.slide-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.slide-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.slide-dot.active {
+    background: white;
+    transform: scale(1.2);
+}
+
+.promo-content h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.promo-content p {
+    font-size: 16px;
     opacity: 0.9;
-    animation: fadeInUp 0.8s ease 0.2s forwards;
-    opacity: 0;
 }
 
 .products-grid {
-    display: grid;
+    display: none; /* По умолчанию скрыт */
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .product-card {
@@ -361,6 +436,7 @@ main {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
 .product-info {
@@ -796,4 +872,8 @@ footer {
 .cart-items, .search-results {
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
 } 

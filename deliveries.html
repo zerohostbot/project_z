@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/deliveries.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="./js/blockchain.js"></script>
 </head>
 <body>
     <header>
@@ -29,6 +30,13 @@
     </header>
 
     <main class="deliveries-main">
+        <div class="mode-switch">
+            <label class="switch">
+                <input type="checkbox" id="blockchainMode" checked>
+                <span class="slider round"></span>
+            </label>
+            <span class="mode-label">режим блокчейн</span>
+        </div>
         <div class="deliveries-container">
             <h1>мои доставки</h1>
             <div class="deliveries-list">

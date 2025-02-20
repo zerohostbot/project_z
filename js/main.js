@@ -4,27 +4,47 @@ const cart = {
 };
 
 let products = {};
+let currentSlide = 0;
+const slides = [
+    {
+        image: 'https://placehold.co/400x400/e74c3c/ffffff/webp?text=Скидка&font=playfair',
+        title: 'Скидка 20% на первый заказ',
+        description: 'Используйте промокод: FIRST20'
+    },
+    {
+        image: 'https://placehold.co/400x400/e74c3c/ffffff/webp?text=Доставка&font=playfair',
+        title: 'Бесплатная доставка',
+        description: 'При заказе от 1000 ₽'
+    },
+    {
+        image: 'https://placehold.co/400x400/e74c3c/ffffff/webp?text=Выпечка&font=playfair',
+        title: 'Свежая выпечка',
+        description: 'Скидки до 25% на всю выпечку до 10:00'
+    }
+];
 
 // Загружаем продукты из JSON
-fetch('js/products.json')
+fetch('products.json')
     .then(response => response.json())
     .then(data => {
         products = data;
+        // После загрузки данных показываем первую категорию
+        showCategoryProducts('all');
     })
     .catch(error => console.error('Ошибка загрузки продуктов:', error));
 
 // Функции
 function showCategoryProducts(category) {
-    const welcomeAnimation = document.querySelector('.welcome-animation');
+    const promoSlider = document.querySelector('.promo-slider');
     const productsGrid = document.querySelector('.products-grid');
     
     if (category === 'all') {
-        welcomeAnimation.style.display = 'flex';
+        promoSlider.style.display = 'block';
         productsGrid.style.display = 'none';
         return;
     }
 
-    welcomeAnimation.style.display = 'none';
+    promoSlider.style.display = 'none';
     productsGrid.style.display = 'grid';
     productsGrid.style.opacity = '1';
 
@@ -33,7 +53,9 @@ function showCategoryProducts(category) {
     productsGrid.innerHTML = categoryProducts.map(product => `
         <div class="product-card" data-id="${product.id}">
             <div class="product-image">
-                <img src="${product.image}" alt="${product.name}">
+                <img src="${product.image}" 
+                     alt="${product.name}" 
+                     onerror="this.src='https://placehold.co/400x400/e74c3c/ffffff/webp?text=${encodeURIComponent(product.name)}&font=playfair'">
             </div>
             <div class="product-info">
                 <h3>${product.name}</h3>
@@ -217,6 +239,18 @@ document.addEventListener('click', (e) => {
 
 // Инициализация после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
+    // Инициализируем слайдер
+    initPromoSlider();
+    
+    // Загружаем продукты
+    fetch('products.json')
+        .then(response => response.json())
+        .then(data => {
+            products = data;
+            showCategoryProducts('all'); // Показываем первую категорию после загрузки данных
+        })
+        .catch(error => console.error('Ошибка загрузки продуктов:', error));
+
     // Обработчики для категорий
     document.querySelectorAll('.category-item').forEach(item => {
         item.addEventListener('click', (e) => {
@@ -310,13 +344,97 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Сохраняем корзину в localStorage перед переходом
-        localStorage.setItem('cart', JSON.stringify(cart));
-        
-        // Переходим на страницу оформления
-        window.location.href = './checkout.html';
+        // Сохраняем заказ и переходим к оформлению
+        const order = createOrder();
+        saveOrder(order);
+        window.location.href = 'checkout.html';
+    });
+});
+
+function handleImageError(img) {
+    img.onerror = null; // Предотвращаем рекурсию
+    img.src = './img/products/placeholder.jpg'; // Путь к плейсхолдеру
+}
+
+function initPromoSlider() {
+    const slidesContainer = document.querySelector('.promo-slides');
+    const dotsContainer = document.querySelector('.slide-dots');
+    const prevButton = document.querySelector('.prev-slide');
+    const nextButton = document.querySelector('.next-slide');
+
+    // Добавляем слайды
+    slidesContainer.innerHTML = slides.map(slide => `
+        <div class="promo-slide">
+            <img src="${slide.image}" alt="${slide.title}">
+            <div class="promo-content">
+                <h2>${slide.title}</h2>
+                <p>${slide.description}</p>
+            </div>
+        </div>
+    `).join('');
+
+    // Добавляем точки
+    dotsContainer.innerHTML = slides.map((_, index) => `
+        <button class="slide-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>
+    `).join('');
+
+    // Обработчики для кнопок
+    prevButton.addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        updateSlider();
     });
 
-    // Начальная инициализация
-    showCategoryProducts('all');
-}); 
+    nextButton.addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateSlider();
+    });
+
+    // Обработчик для точек
+    dotsContainer.addEventListener('click', (e) => {
+        const dot = e.target.closest('.slide-dot');
+        if (dot) {
+            currentSlide = parseInt(dot.dataset.index);
+            updateSlider();
+        }
+    });
+
+    // Автоматическое переключение слайдов
+    setInterval(() => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateSlider();
+    }, 5000);
+}
+
+function updateSlider() {
+    const slidesContainer = document.querySelector('.promo-slides');
+    const dots = document.querySelectorAll('.slide-dot');
+
+    slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+}
+
+// В функции оформления заказа
+function createOrder() {
+    const cartItems = { ...cart.items };
+    const orderId = 'ORDER' + Date.now().toString().slice(-6);
+    
+    return {
+        id: orderId,
+        items: cartItems,
+        status: 'processing',
+        date: new Date()
+    };
+}
+
+function saveOrder(order) {
+    // Сохраняем заказ в localStorage
+    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+    orders.push(order);
+    localStorage.setItem('orders', JSON.stringify(orders));
+    localStorage.setItem('currentOrder', JSON.stringify(order));
+    // Сохраняем корзину
+    localStorage.setItem('cart', JSON.stringify(cart));
+} 
