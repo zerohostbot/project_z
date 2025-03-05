@@ -1,12 +1,12 @@
 :root {
-    --primary-color: #2962FF;      /* Основной синий */
+    --primary-color: #1a73e8;      /* Основной синий */
     --secondary-color: #F5F9FF;    /* Светло-синий фон */
     --text-color: #1A237E;         /* Темно-синий */
     --gray-light: #E3F2FD;         /* Светло-синий */
     --gray: #BBDEFB;               /* Синий */
     --gray-dark: #64B5F6;          /* Яркий синий */
     --white: #FFFFFF;              /* Белый */
-    --shadow: 0 2px 8px rgba(41, 98, 255, 0.08); /* Синяя тень */
+    --shadow: 0 2px 8px rgba(26, 115, 232, 0.08); /* Синяя тень */
 }
 
 * {
@@ -54,6 +54,7 @@ nav {
     display: flex;
     align-items: center;
     gap: 12px;
+    text-decoration: none;
 }
 
 .logo img {
@@ -313,12 +314,12 @@ main {
     border-radius: 16px;
     overflow: hidden;
     margin-bottom: 32px;
-    height: 300px; /* Фиксированная высота */
+    height: 300px;
 }
 
 .promo-slides {
     display: flex;
-    transition: transform 0.3s ease;
+    transition: transform 0.8s ease-in-out;
 }
 
 .promo-slide {
@@ -337,73 +338,17 @@ main {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 24px;
-    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    padding: 32px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
     color: white;
 }
 
-.promo-controls {
-    position: absolute;
-    bottom: 16px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    padding: 0 24px;
-}
-
+/* Удаляем стили для элементов управления */
+.promo-controls,
+.slide-dots,
 .prev-slide,
 .next-slide {
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-}
-
-.prev-slide:hover,
-.next-slide:hover {
-    background: white;
-    transform: scale(1.1);
-}
-
-.slide-dots {
-    display: flex;
-    gap: 8px;
-}
-
-.slide-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.slide-dot.active {
-    background: white;
-    transform: scale(1.2);
-}
-
-.promo-content h2 {
-    font-size: 28px;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.promo-content p {
-    font-size: 16px;
-    opacity: 0.9;
+    display: none;
 }
 
 .products-grid {
@@ -479,7 +424,7 @@ main {
 }
 
 .add-to-cart:hover {
-    background: #FF4069;
+    background: #1557b0;
 }
 
 .add-to-cart.adding {
@@ -610,7 +555,7 @@ main {
 }
 
 .checkout-button:hover {
-    background: #FF4069;
+    background: #1557b0;
 }
 
 @keyframes fadeInUp {
@@ -728,6 +673,10 @@ footer {
     color: var(--primary-color);
     letter-spacing: -0.5px;
     transform: translateY(-2px);
+}
+
+.footer-logo a {
+    text-decoration: none;
 }
 
 .company-info {
@@ -876,4 +825,518 @@ footer {
 
 .product-card:hover .product-image img {
     transform: scale(1.05);
+}
+
+/* Классический режим */
+.delivery-card.classic {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 32px;
+    margin-bottom: 24px;
+    border: 1px solid #e6e6e6;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.delivery-card.classic .delivery-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 32px;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.delivery-card.classic .delivery-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin: 24px 0;
+}
+
+.delivery-card.classic .delivery-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.delivery-card.classic .delivery-item img {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.delivery-card.classic .delivery-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.delivery-card.classic .delivery-item-name {
+    font-size: 14px;
+    color: #333;
+}
+
+.delivery-card.classic .delivery-item-quantity {
+    font-size: 12px;
+    color: #666;
+}
+
+.delivery-card.classic .delivery-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.delivery-card.classic .delivery-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.delivery-card.classic .phone {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.delivery-card.classic .status.processing {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.delivery-card.classic .status.delivering {
+    background: #e8f5e9;
+    color: #1a73e8;
+}
+
+.delivery-card.classic .status.completed {
+    background: #f5f5f5;
+    color: #4285f4;
+}
+
+.delivery-card.classic .track-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.delivery-card.classic .track-button:hover {
+    background: #1557b0;
+}
+
+/* Обновленные стили для блокчейн-компонентов */
+.blockchain-info {
+    background: linear-gradient(135deg, #f6f9ff 0%, #f0f4ff 100%);
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    border: 1px solid rgba(26, 115, 232, 0.1);
+}
+
+.blockchain-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.blockchain-header h4 {
+    font-size: 16px;
+    color: var(--primary-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.blockchain-header h4::before {
+    content: "🔗";
+    font-size: 18px;
+}
+
+.blockchain-status {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    color: #2e7d32;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.blockchain-details {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.hash, .smart-contract {
+    background: rgba(26, 115, 232, 0.05);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #1a73e8;
+    margin: 6px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.blockchain-tracking {
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.tracking-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tracking-point {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+.point-time {
+    font-size: 13px;
+    color: #666;
+}
+
+.point-status {
+    font-weight: 500;
+    color: var(--primary-color);
+    font-size: 14px;
+}
+
+.point-details {
+    display: flex;
+    gap: 20px;
+    color: #666;
+    font-size: 13px;
+}
+
+.point-details span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(26, 115, 232, 0.05);
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.status-steps {
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0;
+    padding: 0 20px;
+    position: relative;
+    min-height: 120px;
+}
+
+.status-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 140px;
+    position: relative;
+    z-index: 2;
+}
+
+.status-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.status-icon svg {
+    width: 24px;
+    height: 24px;
+    color: #6b7280;
+}
+
+.status-step.active .status-icon {
+    background: #4f46e5;
+}
+
+.status-step.active .status-icon svg {
+    color: white;
+}
+
+.status-step.completed .status-icon {
+    background: #10b981;
+}
+
+.status-step.completed .status-icon svg {
+    color: white;
+}
+
+.status-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    width: 140px;
+    word-wrap: break-word;
+    margin-top: 8px;
+}
+
+.status-time {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.progress-line {
+    position: absolute;
+    top: 24px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: #e5e7eb;
+    z-index: 1;
+}
+
+.progress-line-fill {
+    height: 100%;
+    background: #4f46e5;
+    transition: width 0.3s ease;
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 640px) {
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .status-steps {
+        margin: 30px 0;
+        padding: 0 10px;
+    }
+
+    .status-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .status-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .status-text {
+        font-size: 12px;
+        width: 100px;
+    }
+
+    .status-time {
+        font-size: 11px;
+    }
+
+    .progress-line {
+        top: 20px;
+    }
+}
+
+.smart-contract-status {
+    background: var(--secondary-color);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-top: 16px;
+}
+
+.smart-contract-status p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-color);
+    margin: 4px 0;
+}
+
+.smart-contract-status strong {
+    color: var(--primary-color);
+}
+
+/* Анимации для блокчейн-компонентов */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.blockchain-info,
+.blockchain-tracking,
+.tracking-point {
+    animation: fadeInScale 0.3s ease-out;
+}
+
+/* Responsive adjustments for blockchain components */
+@media (max-width: 768px) {
+    .delivery-header {
+        flex-direction: column;
+    }
+
+    .blockchain-info {
+        margin-left: 0;
+        margin-top: 15px;
+    }
+
+    .tracking-point {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+
+    .point-details {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+.blockchain-verification {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.blockchain-verification .qr-code {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.verification-info {
+    flex: 1;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.view-transaction {
+    background: none;
+    border: none;
+    padding: 4px;
+    margin-left: 8px;
+    cursor: pointer;
+    color: var(--primary-color);
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.view-transaction:hover {
+    opacity: 1;
+}
+
+.hash {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.smart-contract-status p strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .blockchain-verification {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .blockchain-verification .qr-code {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* Стили для страницы заказа */
+.order-page {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.order-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.order-header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.error-message {
+    text-align: center;
+    padding: 40px;
+}
+
+.error-message h2 {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.primary-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: transform 0.2s;
+}
+
+.primary-button:hover {
+    transform: translateY(-1px);
 } 

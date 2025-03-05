@@ -7,19 +7,19 @@ let products = {};
 let currentSlide = 0;
 const slides = [
     {
-        image: 'https://placehold.co/400x400/e74c3c/ffffff/webp?text=Скидка&font=playfair',
-        title: 'Скидка 20% на первый заказ',
-        description: 'Используйте промокод: FIRST20'
+        image: 'https://placehold.co/400x400/e74c3c/ffffff/webp?text=акция&font=playfair',
+        title: 'скидка 20% на первый заказ',
+        description: 'используйте промокод: FIRST20'
     },
     {
-        image: 'https://placehold.co/400x400/e74c3c/ffffff/webp?text=Доставка&font=playfair',
-        title: 'Бесплатная доставка',
-        description: 'При заказе от 1000 ₽'
+        image: 'https://placehold.co/400x400/e74c3c/ffffff/webp?text=доставка&font=playfair',
+        title: 'бесплатная доставка',
+        description: 'при заказе от 1000 ₽'
     },
     {
-        image: 'https://placehold.co/400x400/e74c3c/ffffff/webp?text=Выпечка&font=playfair',
-        title: 'Свежая выпечка',
-        description: 'Скидки до 25% на всю выпечку до 10:00'
+        image: 'https://placehold.co/400x400/e74c3c/ffffff/webp?text=выпечка&font=playfair',
+        title: 'свежая выпечка',
+        description: 'скидки до 25% на всю выпечку до 10:00'
     }
 ];
 
@@ -358,11 +358,8 @@ function handleImageError(img) {
 
 function initPromoSlider() {
     const slidesContainer = document.querySelector('.promo-slides');
-    const dotsContainer = document.querySelector('.slide-dots');
-    const prevButton = document.querySelector('.prev-slide');
-    const nextButton = document.querySelector('.next-slide');
-
-    // Добавляем слайды
+    
+    // Создаем слайды
     slidesContainer.innerHTML = slides.map(slide => `
         <div class="promo-slide">
             <img src="${slide.image}" alt="${slide.title}">
@@ -373,47 +370,14 @@ function initPromoSlider() {
         </div>
     `).join('');
 
-    // Добавляем точки
-    dotsContainer.innerHTML = slides.map((_, index) => `
-        <button class="slide-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>
-    `).join('');
-
-    // Обработчики для кнопок
-    prevButton.addEventListener('click', () => {
-        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-        updateSlider();
-    });
-
-    nextButton.addEventListener('click', () => {
-        currentSlide = (currentSlide + 1) % slides.length;
-        updateSlider();
-    });
-
-    // Обработчик для точек
-    dotsContainer.addEventListener('click', (e) => {
-        const dot = e.target.closest('.slide-dot');
-        if (dot) {
-            currentSlide = parseInt(dot.dataset.index);
-            updateSlider();
-        }
-    });
-
-    // Автоматическое переключение слайдов
-    setInterval(() => {
-        currentSlide = (currentSlide + 1) % slides.length;
-        updateSlider();
-    }, 5000);
+    // Запускаем автоматическое пролистывание
+    setInterval(updateSlider, 5000); // Увеличиваем интервал до 5 секунд
 }
 
 function updateSlider() {
     const slidesContainer = document.querySelector('.promo-slides');
-    const dots = document.querySelectorAll('.slide-dot');
-
+    currentSlide = (currentSlide + 1) % slides.length;
     slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
-    
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-    });
 }
 
 // В функции оформления заказа
@@ -430,11 +394,7 @@ function createOrder() {
 }
 
 function saveOrder(order) {
-    // Сохраняем заказ в localStorage
-    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-    orders.push(order);
-    localStorage.setItem('orders', JSON.stringify(orders));
+    // Сохраняем только текущий заказ и корзину
     localStorage.setItem('currentOrder', JSON.stringify(order));
-    // Сохраняем корзину
     localStorage.setItem('cart', JSON.stringify(cart));
 } 

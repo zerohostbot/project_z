@@ -469,7 +469,7 @@ body.classic-mode {
 .classic-mode .logo-text,
 .classic-mode .delivery-order-info h3,
 .classic-mode .deliveries-button {
-    color: #e74c3c !important;
+    color: var(--primary-color) !important;
 }
 
 .classic-mode .delivery-card {
@@ -509,21 +509,26 @@ body.classic-mode {
 
 /* Обновляем стили заголовков секций */
 .classic-mode .section-header h2 {
-    color: #e74c3c;
+    color: var(--primary-color);
     font-weight: 600;
 }
 
 /* Оставляем цветовую маркировку секций */
 .classic-mode .deliveries-section[data-status="processing"] {
-    border-left: 4px solid #f1c40f;
+    border-left: 4px solid var(--primary-color);
 }
 
 .classic-mode .deliveries-section[data-status="delivering"] {
-    border-left: 4px solid #3498db;
+    border-left: 4px solid #1a73e8;
 }
 
 .classic-mode .deliveries-section[data-status="completed"] {
-    border-left: 4px solid #2ecc71;
+    border-left: 4px solid #4285f4;
+}
+
+.classic-mode .delivery-contact p:last-child {
+    color: var(--primary-color);
+    font-weight: 500;
 }
 
 .marker-icon {

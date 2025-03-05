@@ -9,15 +9,123 @@ const PHONE_NUMBER = '+7 (999) 123-45-67';
 const ZOOM_LEVEL = 15; // Уровень приближения карты
 const COURIER_EMOJI = '🚗'; // Эмодзи для курьера
 
+// Класс для работы с блокчейном доставки
+class BlockchainDelivery {
+    constructor(delivery) {
+        this.delivery = delivery;
+        this.blockchainData = {
+            transactionHash: this.generateHash(),
+            smartContract: this.generateSmartContractAddress(),
+            timestamps: [],
+            verifications: []
+        };
+    }
+
+    generateHash() {
+        return '0x' + Math.random().toString(16).slice(2, 10) + 
+               Date.now().toString(16) + 
+               Math.random().toString(16).slice(2, 10);
+    }
+
+    generateSmartContractAddress() {
+        return '0x' + Math.random().toString(16).slice(2, 40);
+    }
+
+    addVerification(stage) {
+        const verification = {
+            timestamp: Date.now(),
+            stage: stage,
+            verifier: '0x' + Math.random().toString(16).slice(2, 40),
+            temperature: (Math.random() * 6 + 2).toFixed(1), // 2-8°C
+            location: this.generateLocation()
+        };
+        this.blockchainData.verifications.push(verification);
+        this.blockchainData.timestamps.push(verification.timestamp);
+    }
+
+    generateLocation() {
+        // Генерируем координаты в пределах Москвы
+        const moscowCenter = {
+            lat: 55.7558,
+            lng: 37.6173
+        };
+        const radius = 0.1; // примерно 10 км
+        const lat = moscowCenter.lat + (Math.random() - 0.5) * radius;
+        const lng = moscowCenter.lng + (Math.random() - 0.5) * radius;
+        return { lat, lng };
+    }
+
+    getSmartContractDetails() {
+        return {
+            address: this.blockchainData.smartContract,
+            conditions: {
+                maxDeliveryTime: '2 hours',
+                maxTemperature: '8°C',
+                paymentAmount: this.delivery.total + ' RUB',
+                paymentStatus: this.delivery.status === 'completed' ? 'EXECUTED' : 'PENDING'
+            }
+        };
+    }
+
+    getBlockchainInfo() {
+        return {
+            transactionHash: this.blockchainData.transactionHash,
+            contract: this.getSmartContractDetails(),
+            verifications: this.blockchainData.verifications,
+            lastUpdate: Math.max(...this.blockchainData.timestamps)
+        };
+    }
+}
+
+// Класс для работы с блокчейном
+class DeliveryChain extends Blockchain {
+    constructor() {
+        super();
+        this.difficulty = 1; // Упрощаем для демонстрации
+    }
+
+    async createDeliveryBlock(order) {
+        await this.addTransaction(
+            'store',
+            order.address,
+            order.items,
+            order.status
+        );
+        await this.minePendingTransactions();
+        return this.getLatestBlock();
+    }
+
+    async updateDeliveryStatus(orderId, newStatus) {
+        const block = await this.createDeliveryBlock({
+            id: orderId,
+            status: newStatus,
+            timestamp: Date.now()
+        });
+        return block;
+    }
+}
+
 // Функция генерации случайного ресторана
 function generateRandomRestaurant(deliveryLocation) {
-    // Генерируем случайное смещение в пределах ~2км
-    const offset = 0.02;
-    const lat = deliveryLocation[0] + (Math.random() - 0.5) * offset;
-    const lng = deliveryLocation[1] + (Math.random() - 0.5) * offset;
+    // Генерируем случайное смещение в радиусе 1-3 км
+    const radius = Math.random() * 2 + 1; // от 1 до 3 км
+    const angle = Math.random() * Math.PI * 2; // случайный угол
+    
+    // Примерно 111 км на градус широты/долготы
+    const lat = deliveryLocation[0] + (radius / 111) * Math.cos(angle);
+    const lng = deliveryLocation[1] + (radius / 111) * Math.sin(angle);
+    
+    const restaurantNames = [
+        'Магнит',
+        'Перекресток',
+        'Вкусвилл',
+        'Дикси',
+        'Пятёрочка',
+    ];
     
     return {
-        location: [lat, lng]
+        location: [lat, lng],
+        name: restaurantNames[Math.floor(Math.random() * restaurantNames.length)]
     };
 }
 
@@ -25,7 +133,7 @@ function initDeliveryMap() {
     deliveryMap = L.map('delivery-map').setView([55.76, 37.64], 11);
     
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: '© OpenStreetMap'
     }).addTo(deliveryMap);
 
     // Добавляем маркеры только для активных доставок
@@ -126,6 +234,20 @@ function sortOrders(orders) {
     });
 }
 
+// Функция для сохранения заказа
+function saveOrder(order) {
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    const existingOrderIndex = orders.findIndex(o => o.id === order.id);
+    
+    if (existingOrderIndex !== -1) {
+        orders[existingOrderIndex] = order;
+    } else {
+        orders.push(order);
+    }
+    
+    localStorage.setItem('orders', JSON.stringify(orders));
+}
+
 // Обновим функцию симуляции доставки
 function simulateDelivery(orderId, deliveryChain) {
     const statuses = ['processing', 'delivering', 'completed'];
@@ -145,20 +267,17 @@ function simulateDelivery(orderId, deliveryChain) {
         const orderIndex = orders.findIndex(o => o.id === orderId);
         if (orderIndex !== -1) {
             orders[orderIndex].status = newStatus;
+            if (newStatus === 'completed') {
+                orders[orderIndex].completedAt = new Date().toISOString();
+            }
             localStorage.setItem('orders', JSON.stringify(orders));
         }
         
         // Обновляем UI
         updateDeliveryUI(orderId, newStatus);
         
-        // Запускаем анимацию доставки
-        if (newStatus === 'delivering') {
-            await simulateCourierMovement(orderId);
-            // После завершения маршрута переходим к следующему статусу
-            setTimeout(updateStatus, 2000);
-        } else {
-            setTimeout(updateStatus, 5000); // Следующий статус через 5 секунд
-        }
+        // Запускаем следующий статус через интервал
+        setTimeout(updateStatus, newStatus === 'delivering' ? 10000 : 5000);
     };
 
     // Начинаем с небольшой задержкой
@@ -167,8 +286,8 @@ function simulateDelivery(orderId, deliveryChain) {
 
 // Обновим функцию поиска ближайшего ресторана
 function findNearestRestaurant(deliveryLocation) {
-    // Генерируем 3 случайных ресторана
-    const restaurants = Array.from({ length: 3 }, () => generateRandomRestaurant(deliveryLocation));
+    // Генерируем 5 случайных ресторанов вокруг точки доставки
+    const restaurants = Array.from({ length: 5 }, () => generateRandomRestaurant(deliveryLocation));
     
     // Находим ближайший
     return restaurants.reduce((nearest, restaurant) => {
@@ -196,26 +315,25 @@ async function simulateCourierMovement(orderId) {
         deliveryLocation = [order.coordinates.lat, order.coordinates.lng];
     } else {
         try {
-            const fullAddress = `Москва, ${order.address}`;
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fullAddress)}&format=json`);
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(order.address)}&format=json`);
             const data = await response.json();
             
             if (data.length > 0) {
                 deliveryLocation = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
             } else {
-                console.warn('Адрес не найден, используем запасные координаты');
-                deliveryLocation = [55.753994, 37.622093];
+                console.error('Адрес не найден');
+                return;
             }
         } catch (error) {
             console.error('Ошибка геокодирования:', error);
-            deliveryLocation = [55.753994, 37.622093];
+            return;
         }
     }
 
-    // Находим ближайший ресторан
+    // Находим ближайший ресторан к точке доставки
     const nearestRestaurant = findNearestRestaurant(deliveryLocation);
     
-    // Получаем маршрут
+    // Получаем маршрут от ресторана до точки доставки
     const route = await getRoute(nearestRestaurant.location, deliveryLocation);
 
     // Создаем или обновляем маркер курьера
@@ -226,29 +344,20 @@ async function simulateCourierMovement(orderId) {
                 className: 'courier-marker',
                 html: '<div class="courier-icon">🚗</div>',
                 iconSize: [40, 40],
-                iconAnchor: [20, 20],
-                popupAnchor: [0, -20]
+                iconAnchor: [20, 20]
             })
         }).addTo(deliveryMap);
         
-        // Добавим всплывающую подсказку
-        courierMarker.bindPopup('Ваш заказ в пути');
+        courierMarker.bindPopup(`Курьер доставляет заказ #${order.id}`);
         courierMarkers.set(orderId, courierMarker);
     }
 
-    // Создаем анимированную линию маршрута
+    // Создаем маркеры и линию маршрута
     const routeLine = L.polyline(route, {
         color: '#2962FF',
         weight: 4,
-        opacity: 0.8,
-        className: 'courier-route'
+        opacity: 0.8
     }).addTo(deliveryMap);
-
-    // Центрируем карту на маршруте
-    deliveryMap.fitBounds(routeLine.getBounds(), {
-        padding: [50, 50],
-        maxZoom: 15
-    });
 
     // Добавляем маркеры ресторана и точки доставки
     const restaurantMarker = L.marker(nearestRestaurant.location, {
@@ -271,30 +380,18 @@ async function simulateCourierMovement(orderId) {
     }).addTo(deliveryMap)
     .bindPopup(order.address);
 
-    // Анимируем движение по маршруту
+    // Центрируем карту на маршруте
+    deliveryMap.fitBounds(routeLine.getBounds(), {
+        padding: [50, 50]
+    });
+
+    // Анимируем движение курьера
     for (let i = 0; i < route.length; i++) {
         courierMarker.setLatLng(route[i]);
-        
-        // Поворачиваем иконку в направлении движения
-        if (i < route.length - 1) {
-            const angle = getAngle(route[i], route[i + 1]);
-            const icon = courierMarker.getElement().querySelector('.courier-icon');
-            if (icon) {
-                icon.style.transform = `rotate(${angle}deg)`;
-            }
-        }
-
-        // Следим за курьером с приближением
-        deliveryMap.setView(route[i], ZOOM_LEVEL, {
-            animate: true,
-            duration: 1,
-            easeLinearity: 0.5
-        });
-
         await new Promise(resolve => setTimeout(resolve, DELIVERY_SPEED));
     }
 
-    // Плавно удаляем все элементы
+    // Плавно удаляем элементы
     routeLine.setStyle({ opacity: 0 });
     setTimeout(() => {
         routeLine.remove();
@@ -410,126 +507,66 @@ function renderOrders(orders) {
     const isClassicMode = document.body.classList.contains('classic-mode');
     
     return orders.map(order => {
-        const date = new Date(order.date);
-        const formattedDate = date.toLocaleString('ru-RU', {
-            day: 'numeric',
-            month: 'long',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-
-        if (isClassicMode) {
-            // Классический вид
-            const totalPrice = Object.values(order.items)
-                .reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            const estimatedDelivery = new Date(date.getTime() + 60 * 60 * 1000)
-                .toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-
-            return `
-                <div class="delivery-card" data-order-id="${order.id}">
-                    <div class="delivery-order-info">
-                        <h3>заказ #${order.id}</h3>
-                        <p>адрес: ${order.address}</p>
-                        <p>сумма заказа: ${totalPrice} ₽</p>
-                        <p>примерное время доставки: ${estimatedDelivery}</p>
-                        <div class="delivery-contact">
-                            <p>телефон для справок:</p>
-                            <p>${PHONE_NUMBER}</p>
+        const totalPrice = Object.values(order.items)
+            .reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        const orderPageUrl = `order.html?id=${order.id}`;
+        
+        return `
+            <div class="delivery-card" data-order-id="${order.id}">
+                <div class="delivery-header">
+                    <div class="order-info">
+                        <div class="order-number">
+                            <h3>
+                                <a href="${orderPageUrl}" class="order-link">Заказ #${order.id}</a>
+                            </h3>
+                            <span class="status ${order.status}">${getStatusText(order.status)}</span>
                         </div>
                     </div>
-                    <div class="delivery-items">
-                        ${Object.entries(order.items).map(([id, item]) => `
-                            <div class="delivery-item">
-                                <img src="${item.image}" alt="${item.name}">
-                                <div class="delivery-item-info">
-                                    <span class="delivery-item-name">${item.name}</span>
-                                    <span class="delivery-item-quantity">×${item.quantity}</span>
+                </div>
+                
+                <div class="delivery-status-timeline">
+                    <div class="progress-line">
+                        <div class="progress-line-fill" style="width: ${getDeliveryProgress(order.status)}%"></div>
+                    </div>
+                    
+                    <div class="status-steps">
+                        ${getDeliverySteps(order.status).map((step, index) => `
+                            <div class="status-step ${index * 33 <= getDeliveryProgress(order.status) ? 'active' : ''} ${index * 33 < getDeliveryProgress(order.status) ? 'completed' : ''}">
+                                <div class="status-icon">
+                                    ${getStatusIcon(step)}
+                                </div>
+                                <div class="status-text">
+                                    ${step}
+                                    <div class="status-time">${new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</div>
                                 </div>
                             </div>
                         `).join('')}
                     </div>
                 </div>
-            `;
-        } else {
-            // Существующий блокчейн вид
-            const progress = getDeliveryProgress(order.status);
-            
-            return `
-                <div class="delivery-card" data-order-id="${order.id}">
-                    <div class="delivery-status-timeline">
-                        <div class="progress-line">
-                            <div class="progress-line-fill" style="width: ${progress}%"></div>
-                        </div>
-                        
-                        <div class="status-step ${progress >= 0 ? 'active' : ''} ${progress >= 33 ? 'completed' : ''}">
-                            <div class="status-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 15.5H7.5C6.10444 15.5 5.40665 15.5 4.83886 15.6722C3.56045 16.06 2.56004 17.0605 2.17224 18.3389C2 18.9067 2 19.6044 2 21M19 21V15M16 18H22M14.5 7.5C14.5 9.98528 12.4853 12 10 12C7.51472 12 5.5 9.98528 5.5 7.5C5.5 5.01472 7.51472 3 10 3C12.4853 3 14.5 5.01472 14.5 7.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <div class="status-text">
-                                принят
-                                <div class="status-time">${formattedDate}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="status-step ${progress >= 33 ? 'active' : ''} ${progress >= 66 ? 'completed' : ''}">
-                            <div class="status-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 15.5H7.5C6.10444 15.5 5.40665 15.5 4.83886 15.6722C3.56045 16.06 2.56004 17.0605 2.17224 18.3389C2 18.9067 2 19.6044 2 21M19 21V15M16 18H22M14.5 7.5C14.5 9.98528 12.4853 12 10 12C7.51472 12 5.5 9.98528 5.5 7.5C5.5 5.01472 7.51472 3 10 3C12.4853 3 14.5 5.01472 14.5 7.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <div class="status-text">
-                                готовится
-                                ${progress >= 33 ? `<div class="status-time">21:37</div>` : ''}
-                            </div>
-                        </div>
-                        
-                        <div class="status-step ${progress >= 66 ? 'active' : ''} ${progress >= 100 ? 'completed' : ''}">
-                            <div class="status-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 15.5H7.5C6.10444 15.5 5.40665 15.5 4.83886 15.6722C3.56045 16.06 2.56004 17.0605 2.17224 18.3389C2 18.9067 2 19.6044 2 21M19 21V15M16 18H22M14.5 7.5C14.5 9.98528 12.4853 12 10 12C7.51472 12 5.5 9.98528 5.5 7.5C5.5 5.01472 7.51472 3 10 3C12.4853 3 14.5 5.01472 14.5 7.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <div class="status-text">
-                                в пути
-                                ${progress >= 66 ? `<div class="status-time">21:45</div>` : ''}
-                            </div>
-                        </div>
-                        
-                        <div class="status-step ${progress >= 100 ? 'active completed' : ''}">
-                            <div class="status-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 15.5H7.5C6.10444 15.5 5.40665 15.5 4.83886 15.6722C3.56045 16.06 2.56004 17.0605 2.17224 18.3389C2 18.9067 2 19.6044 2 21M19 21V15M16 18H22M14.5 7.5C14.5 9.98528 12.4853 12 10 12C7.51472 12 5.5 9.98528 5.5 7.5C5.5 5.01472 7.51472 3 10 3C12.4853 3 14.5 5.01472 14.5 7.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <div class="status-text">
-                                доставлен
-                                ${progress >= 100 ? `<div class="status-time">22:00</div>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="delivery-info">
-                        <p class="delivery-date">${formattedDate}</p>
-                        <p class="delivery-address">${order.address}</p>
-                        <div class="delivery-items">
-                            ${Object.entries(order.items).map(([id, item]) => `
-                                <div class="delivery-item">
-                                    <img src="${item.image}" alt="${item.name}">
-                                    <div class="delivery-item-info">
-                                        <span class="delivery-item-name">${item.name}</span>
-                                        <span class="delivery-item-quantity">×${item.quantity}</span>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
+                
+                <div class="smart-contract-status">
+                    <p>Статус: <strong>${getDetailedStatus(order.status)}</strong></p>
+                    <p>Сумма заказа: <strong>${totalPrice} ₽</strong></p>
                 </div>
-            `;
-        }
+            </div>
+        `;
     }).join('');
+}
+
+// Вспомогательная функция для получения шагов доставки
+function getDeliverySteps(status) {
+    const steps = ['ЗАКАЗ СОЗДАН', 'ОПЛАТА ПОДТВЕРЖДЕНА', 'ПЕРЕДАНО КУРЬЕРУ', 'ДОСТАВЛЕНО'];
+    switch (status) {
+        case 'processing':
+            return steps.slice(0, 2);
+        case 'delivering':
+            return steps.slice(0, 3);
+        case 'completed':
+            return steps;
+        default:
+            return steps;
+    }
 }
 
 function getDeliveryProgress(status) {
@@ -541,31 +578,23 @@ function getDeliveryProgress(status) {
     }
 }
 
-class DeliveryChain extends Blockchain {
-    constructor() {
-        super();
-        this.difficulty = 1; // Упрощаем для демонстрации
-    }
-
-    async createDeliveryBlock(order) {
-        await this.addTransaction(
-            'store',
-            order.address,
-            order.items,
-            order.status
-        );
-        await this.minePendingTransactions();
-        return this.getLatestBlock();
-    }
-
-    async updateDeliveryStatus(orderId, newStatus) {
-        const block = await this.createDeliveryBlock({
-            id: orderId,
-            status: newStatus,
-            timestamp: Date.now()
-        });
-        return block;
-    }
+// Функция для показа уведомлений
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 100);
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
 }
 
 // Обновим функцию обновления статуса
@@ -585,6 +614,18 @@ function updateOrdersDisplay() {
 
     // Обновляем DOM
     const deliveriesList = document.querySelector('.deliveries-list');
+    if (!deliveriesList) return;
+
+    if (orders.length === 0) {
+        deliveriesList.innerHTML = `
+            <div class="empty-deliveries">
+                <p>У вас пока нет доставок</p>
+                <a href="index.html" class="primary-button">Сделать заказ</a>
+            </div>
+        `;
+        return;
+    }
+
     deliveriesList.innerHTML = `
         ${groupedOrders.processing.length ? 
             createCollapsibleSection('processing', 'готовятся', renderOrders(groupedOrders.processing))
@@ -598,4 +639,87 @@ function updateOrdersDisplay() {
             createCollapsibleSection('completed', 'доставлены', renderOrders(groupedOrders.completed))
         : ''}
     `;
+
+    // Добавляем стили
+    const style = document.createElement('style');
+    style.textContent = `
+        .order-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .order-link:hover {
+            color: #1557b0;
+            text-decoration: underline;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Добавим функцию для получения текста статуса
+function getStatusText(status) {
+    switch (status) {
+        case 'processing': return 'готовится';
+        case 'delivering': return 'в пути';
+        case 'completed': return 'доставлен';
+        default: return 'неизвестно';
+    }
+}
+
+// Добавим функцию для получения детального статуса
+function getDetailedStatus(status) {
+    switch (status) {
+        case 'processing':
+            return 'в обработке';
+        case 'delivering':
+            return 'в пути';
+        case 'completed':
+            return 'выполнен';
+        default:
+            return 'неизвестно';
+    }
+}
+
+// Функция для получения иконки статуса
+function getStatusIcon(stage) {
+    const icons = {
+        'ЗАКАЗ СОЗДАН': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 12L11 14L15 10M12 3L13.9101 4.87147C14.3908 5.32918 15.0786 5.5 15.7754 5.5H18C19.1046 5.5 20 6.39543 20 7.5V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V7.5C4 6.39543 4.89543 5.5 6 5.5H8.22461C8.92139 5.5 9.60924 5.32918 10.0899 4.87147L12 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        'ОПЛАТА ПОДТВЕРЖДЕНА': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        'СБОРКА ЗАВЕРШЕНА': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.5 7.27783L12 12.0001M12 12.0001L3.5 7.27783M12 12.0001L12 21.5001M21 16.5001V7.50006C21 6.96963 20.7314 6.47545 20.2889 6.19213L12.7889 1.69213C12.3132 1.39839 11.6868 1.39839 11.2111 1.69213L3.71111 6.19213C3.26863 6.47545 3 6.96963 3 7.50006V16.5001C3 17.0305 3.26863 17.5247 3.71111 17.808L11.2111 22.308C11.6868 22.6018 12.3132 22.6018 12.7889 22.308L20.2889 17.808C20.7314 17.5247 21 17.0305 21 16.5001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        'ПЕРЕДАНО КУРЬЕРУ': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 19L8 7M8 7L4 11M8 7L12 11M16 5V17M16 17L12 13M16 17L20 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        'ДОСТАВЛЕНО': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`
+    };
+    
+    return icons[stage] || icons['ЗАКАЗ СОЗДАН'];
 } 

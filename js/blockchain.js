@@ -36,35 +36,64 @@ class Block {
 
 class Blockchain {
     constructor() {
-        this.chain = [this.createGenesisBlock()];
-        this.difficulty = 2;
+        this.chain = [];
         this.pendingTransactions = [];
+        this.difficulty = 1;
+        this.createGenesisBlock();
     }
 
     createGenesisBlock() {
-        return new Block(Date.now(), [], "0");
+        const genesisBlock = {
+            timestamp: Date.now(),
+            transactions: [],
+            previousHash: "0",
+            hash: this.calculateHash({
+                timestamp: Date.now(),
+                transactions: [],
+                previousHash: "0",
+                nonce: 0
+            }),
+            nonce: 0
+        };
+        this.chain.push(genesisBlock);
     }
 
     getLatestBlock() {
         return this.chain[this.chain.length - 1];
     }
 
-    async addTransaction(from, to, product, quantity) {
+    calculateHash(block) {
+        const data = block.previousHash + block.timestamp + JSON.stringify(block.transactions) + block.nonce;
+        let hash = '';
+        for (let i = 0; i < data.length; i++) {
+            hash += data.charCodeAt(i).toString(16);
+        }
+        return hash;
+    }
+
+    async addTransaction(from, to, data, status) {
         this.pendingTransactions.push({
             from,
             to,
-            product,
-            quantity,
+            data,
+            status,
             timestamp: Date.now()
         });
     }
 
     async minePendingTransactions() {
-        const block = new Block(Date.now(), this.pendingTransactions, this.getLatestBlock().hash);
-        await block.mineBlock(this.difficulty);
-        
+        const block = {
+            timestamp: Date.now(),
+            transactions: this.pendingTransactions,
+            previousHash: this.getLatestBlock().hash,
+            nonce: 0
+        };
+
+        block.hash = this.calculateHash(block);
         this.chain.push(block);
         this.pendingTransactions = [];
+        
+        return block;
     }
 
     async isChainValid() {

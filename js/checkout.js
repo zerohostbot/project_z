@@ -2,9 +2,28 @@ let map, marker;
 let confirmAddressBtn; // Объявляем глобально
 
 function initMap() {
-    // Инициализируем карту с центром в Москве
-    map = L.map('map').setView([55.76, 37.64], 11);
-    
+    // Пробуем получить местоположение пользователя
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                map = L.map('map').setView([latitude, longitude], 13);
+                initMapLayers();
+            },
+            (error) => {
+                // Если не удалось получить местоположение, используем центр Москвы
+                map = L.map('map').setView([55.751244, 37.618423], 11);
+                initMapLayers();
+            }
+        );
+    } else {
+        // Если геолокация не поддерживается
+        map = L.map('map').setView([55.751244, 37.618423], 11);
+        initMapLayers();
+    }
+}
+
+function initMapLayers() {
     // Добавляем слой OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
@@ -28,7 +47,7 @@ function initMap() {
         
         // Получаем адрес по координатам
         try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ru`);
             const data = await response.json();
             addressInput.value = data.display_name;
         } catch (error) {
@@ -39,7 +58,7 @@ function initMap() {
         marker.on('dragend', async () => {
             const pos = marker.getLatLng();
             try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.lat}&lon=${pos.lng}&format=json`);
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.lat}&lon=${pos.lng}&format=json&accept-language=ru`);
                 const data = await response.json();
                 addressInput.value = data.display_name;
             } catch (error) {
@@ -51,7 +70,7 @@ function initMap() {
     // Поиск по адресу
     addressInput.addEventListener('change', async () => {
         try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addressInput.value)}&format=json`);
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addressInput.value)}&format=json&accept-language=ru`);
             const data = await response.json();
             
             if (data.length > 0) {
@@ -128,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Создаем заказ
             const order = {
+                id: JSON.parse(localStorage.getItem('currentOrder')).id,
                 items: cart.items,
                 address: addressInput.value,
                 paymentMethod: method,
@@ -136,9 +156,12 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             
             // Сохраняем заказ
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            orders.push(order);
-            localStorage.setItem('orders', JSON.stringify(orders));
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            // Проверяем, нет ли уже такого заказа
+            if (!orders.some(o => o.id === order.id)) {
+                orders.push(order);
+                localStorage.setItem('orders', JSON.stringify(orders));
+            }
             
             // Очищаем корзину
             localStorage.setItem('cart', JSON.stringify({ items: {} }));
